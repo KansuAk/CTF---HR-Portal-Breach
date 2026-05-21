@@ -1,0 +1,48 @@
+---
+- name: Ensure web root exists
+  file:
+    path: /var/www/html
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Deploy index.php
+  copy:
+    src: index.php
+    dest: /var/www/html/index.php
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Deploy vulnerable view.php (LFI)
+  copy:
+    src: view.php
+    dest: /var/www/html/view.php
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Deploy config.php with credentials
+  copy:
+    src: config.php
+    dest: /var/www/html/config.php
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Create additional content directory
+  file:
+    path: /var/www/html/pages
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Create example page
+  copy:
+    content: "<h2>Welcome to the HR Portal</h2><p>Internal documents available.</p>"
+    dest: /var/www/html/pages/home.php
+    owner: www-data
+    group: www-data
+    mode: '0644'
