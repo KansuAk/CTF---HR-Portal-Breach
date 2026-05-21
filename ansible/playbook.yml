@@ -1,0 +1,21 @@
+---
+# Main Provisioning Playbook für die CTF-Maschine
+# Ziel: Reproduzierbare, modulare und nachvollziehbare Infrastruktur
+
+- name: Provision CTF Target Machine
+  hosts: all
+  become: yes
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  roles:
+    - base
+    - webserver
+    - application
+    - users
+    - logging
+    - privilege_escalation
+    - decoys
+    - flags
+    - harden
