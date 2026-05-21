@@ -1,0 +1,6 @@
++--------------------------------------------------+
+| HR Portal Breach - Internal HR Infrastructure    |
+|                                                  |
+| Authorized access only.                          |
+| All activity may be monitored and logged.        |
++--------------------------------------------------+
