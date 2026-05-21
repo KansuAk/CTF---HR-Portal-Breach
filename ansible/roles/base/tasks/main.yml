@@ -1,0 +1,84 @@
+---
+# Base OS Configuration for HR Portal Breach CTF
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Set system timezone
+  timezone:
+    name: UTC
+
+- name: Install essential packages
+  apt:
+    name:
+      - curl
+      - wget
+      - vim
+      - nano
+      - net-tools
+      - unzip
+      - git
+      - python3-pip
+      - acl
+      - ufw
+      - tree
+      - lsof
+      - psmisc
+    state: present
+
+- name: Install passlib for Ansible password hashing
+  pip:
+    name: passlib
+    executable: pip3
+
+- name: Disable unattended upgrades service
+  systemd:
+    name: unattended-upgrades
+    enabled: no
+    state: stopped
+  ignore_errors: yes
+
+- name: Disable automatic apt upgrades
+  copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      APT::Periodic::Update-Package-Lists "0";
+      APT::Periodic::Unattended-Upgrade "0";
+
+- name: Set hostname
+  hostname:
+    name: hr-portal-breach
+
+- name: Deploy MOTD banner
+  copy:
+    src: motd.txt
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Ensure journald persistent logging directory exists
+  file:
+    path: /var/log/journal
+    state: directory
+    owner: root
+    group: systemd-journal
+    mode: '2755'
+
+- name: Restart systemd-journald
+  systemd:
+    name: systemd-journald
+    state: restarted
+
+- name: Ensure /opt/ctf directory exists
+  file:
+    path: /opt/ctf
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
